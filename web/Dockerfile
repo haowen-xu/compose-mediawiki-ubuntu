@@ -29,6 +29,13 @@ RUN set -x; \
         unzip \
         mysql-client \
         wget \
+        build-essential \
+        dvipng \
+        ocaml \
+        texlive-fonts-recommended \
+        texlive-lang-greek \
+        texlive-latex-recommended \
+        texlive-latex-extra \
     && pear install mail net_smtp \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /var/cache/apt/archives/* \
@@ -121,6 +128,44 @@ RUN set -x; \
     && git clone --depth 1 -b $MW_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/cldr \
     && git clone --depth 1 -b $MW_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CleanChanges \
     && git clone --depth 1 -b $MW_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/UniversalLanguageSelector
+
+#### CodeEditor
+RUN set -x; \
+    cd $MW_HOME/extensions \
+    && git clone --depth 1 -b $MW_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CodeEditor \
+    && cd CodeEditor \
+    && composer install --no-dev \
+    && cd ..
+
+#### Scribunto
+RUN set -x; \
+    cd $MW_HOME/extensions \
+    && git clone --depth 1 -b $MW_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Scribunto \
+    && cd Scribunto \
+    && composer install --no-dev \
+    && cd ..
+
+#### TemplateData
+RUN set -x; \
+    cd $MW_HOME/extensions \
+    && git clone --depth 1 -b $MW_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateData \
+    && cd TemplateData \
+    && composer install --no-dev \
+    && cd ..
+
+#### Graph
+RUN set -x; \
+    cd $MW_HOME/extensions \
+    && git clone --depth 1 -b $MW_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Graph
+
+#### Math
+RUN set -x; \
+    cd $MW_HOME/extensions \
+    && git clone --depth 1 -b $MW_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Math \
+    && cd Math \
+    && composer install --no-dev \
+    && make \
+    && cd ..
 
 ##### VisualEditor extension
 RUN set -x; \

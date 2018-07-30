@@ -3,9 +3,11 @@ services:
     db:
         image: pastakhov/mysql:5.7
         restart: always
+        volumes:
+            - mysql-data:/var/lib/mysql
         environment:
             - MYSQL_ROOT_HOST=%
-            - MYSQL_ROOT_PASSWORD=3dodPaTXF5
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-MySQLROOTPASSWORD}
 
     proxy:
         image: pastakhov/varnish-mediawiki:1.0
@@ -27,39 +29,43 @@ services:
             context: ./web
             dockerfile: Dockerfile
         restart: always
+        volumes:
+            - mediawiki-images:/var/www/html/w/images
+            - ${PWD}/web/CustomSettings.php:/var/www/html/w/CustomSettings.php
         depends_on:
             - db
-            - elasticsearch
+            # - elasticsearch
             - memcached
             - parsoid
+            - mathoid
             - restbase
         environment:
-            - MW_SITE_SERVER=//localhost:8080
-            - MW_SITE_NAME=MediaWiki
+            - MW_SITE_SERVER=${MW_SITE_SERVER:-http://localhost}
+            - MW_SITE_NAME=${MW_SITE_NAME:-MediaWiki}
             - MW_SITE_LANG=en
             - MW_DEFAULT_SKIN=vector
             - MW_ENABLE_UPLOADS=1
             - MW_USE_INSTANT_COMMONS=0
             - MW_ADMIN_USER=admin
-            - MW_ADMIN_PASS=q32Gx7Amg7
+            - MW_ADMIN_PASS=${MW_ADMIN_PASS:-WIKIADMINPASSWORD}
             - MW_DB_NAME=mediawiki
             - MW_DB_USER=mwuser
-            - MW_DB_PASS=8Xgat7mUKa
+            - MW_DB_PASS=${MYSQL_ROOT_PASSWORD:-MySQLROOTPASSWORD}
             - MW_DB_INSTALLDB_USER=root
-            - MW_DB_INSTALLDB_PASS=3dodPaTXF5
+            - MW_DB_INSTALLDB_PASS=${MYSQL_ROOT_PASSWORD:-MySQLROOTPASSWORD}
             - MW_AUTOUPDATE=true
             - MW_PROXY_SERVERS=proxy
             - MW_MAIN_CACHE_TYPE=CACHE_MEMCACHED
             - MW_MEMCACHED_SERVERS=memcached:11211
-            - MW_SEARCH_TYPE=CirrusSearch
-            - MW_CIRRUS_SEARCH_SERVERS=elasticsearch
+            - MW_SEARCH_TYPE=  # CirrusSearch
+            - MW_CIRRUS_SEARCH_SERVERS=  # elasticsearch
             - MW_REST_DOMAIN=web
             - MW_REST_PARSOID_URL=http://parsoid:8000
             - MW_REST_RESTBASE_URL=http://restbase:7231
             - MW_REST_RESTBASE_PROXY_PATH=/api/rest_
             - MW_FLOW_NAMESPACES=NS_TALK,NS_USER_TALK
             - PHP_LOG_ERRORS=On
-            - PHP_ERROR_REPORTING=E_ALL #Production Value: E_ALL & ~E_DEPRECATED & ~E_STRICT
+            - PHP_ERROR_REPORTING=E_ALL # Alternative Value: E_ALL & ~E_DEPRECATED & ~E_STRICT
 
     memcached:
         image: memcached
@@ -72,24 +78,39 @@ services:
             - PARSOID_NUM_WORKERS=0
             - PARSOID_DOMAIN_web=http://web/w/api.php
 
+    mathoid:
+        image: nlpub/mathoid
+        restart: always
+
     restbase:
-        image: pastakhov/restbase:0.16.9
+        build:
+            context: ./restbase/0.16.9
+            dockerfile: Dockerfile
         restart: always
         environment:
             - RB_CONF_NUM_WORKERS=0
             - RB_CONF_DOMAIN_web=http://web/w/api.php
             - RB_CONF_PARSOID_HOST=http://parsoid:8000
+            - RB_CONF_MATHOID_HOST=http://mathoid:10044
+            # - RB_CONF_GRAPHOID_HOST=https://graphoid-beta.wmflabs.org
             - RB_CONF_BASE_URI_TEMPLATE=http://{domain}/api/rest_v1
             - RB_CONF_API_URI_TEMPLATE=http://{domain}/w/api.php
-            - RB_CONF_LOGGING_LEVEL=info #trace
+            - RB_CONF_LOGGING_LEVEL=info
             - RB_CONF_PDF_URI=http://pdf:3000
 
-    elasticsearch:
-        image: elasticsearch:5.6
-        restart: always
+    # elasticsearch:
+    #     image: elasticsearch:5.6
+    #     restart: always
 
     pdf:
         image: msokk/electron-render-service
         restart: always
         environment:
             RENDERER_ACCESS_KEY: secret
+
+volumes:
+    mediawiki-images:
+        driver: local
+
+    mysql-data:
+        driver: local

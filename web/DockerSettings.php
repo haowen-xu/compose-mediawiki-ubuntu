@@ -188,6 +188,35 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 # Displays the Publish and Cancel buttons on the top right side
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
 
+###################### Scientific extensions #######################
+wfLoadExtension( 'Math' );
+wfLoadExtension( 'Graph' );
+
+$wgMathPath = "{$wgScriptPath}/images/math";
+$wgDefaultUserOptions['math'] = 'mathml';
+$wgMathMathMLUrl = 'http://mathoid:10044/';
+
+$tmpRestRestbaseUrl = getenv( 'MW_REST_RESTBASE_URL' );
+$tmpRestProxyPath = getenv( 'MW_REST_RESTBASE_PROXY_PATH' );
+$tmpProxy = getenv( 'MW_PROXY_SERVERS' );
+if ( $tmpProxy && $tmpRestProxyPath ) {
+    $wgMathFullRestbaseURL = $wgServer . $tmpRestProxyPath;
+} else {
+    $wgMathFullRestbaseURL = $wgServer . ':' . getenv( 'MW_REST_RESTBASE_PORT' ) . "/$tmpRestDomain/";
+}
+// $wgGraphImgServiceUrl = $wgMathFullRestbaseURL . "v1/%2\$s/%3\$s/%4\$s.png";
+
+################ Scribunto & TemplateData extension ################
+wfLoadExtension( 'CodeEditor' );
+
+# wfLoadExtension( 'Scribunto' );
+require_once "$IP/extensions/Scribunto/Scribunto.php";
+$wgScribuntoDefaultEngine = 'luastandalone';
+$wgScribuntoUseGeSHi = true;
+$wgScribuntoUseCodeEditor = true;
+
+wfLoadExtension( 'TemplateData' );
+
 ########################### VisualEditor ###########################
 $tmpRestDomain = getenv( 'MW_REST_DOMAIN' );
 $tmpRestParsoidUrl = getenv( 'MW_REST_PARSOID_URL' );

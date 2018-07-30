@@ -12,7 +12,7 @@ docker-compose up
 ```
 Wait for the completion of the build and initialization process and access it via `http://localhost:8080` in a browser.
 
-Enjoy with [MediaWiki](https://www.mediawiki.org/) + [VisualEditor](https://www.mediawiki.org/wiki/VisualEditor) + [Elasticsearch](https://www.mediawiki.org/wiki/Extension:CirrusSearch) + most popular extensions
+Enjoy with [MediaWiki](https://www.mediawiki.org/) + [VisualEditor](https://www.mediawiki.org/wiki/VisualEditor) + [Elasticsearch](https://www.mediawiki.org/wiki/Extension:CirrusSearch) + + [Mathoid](https://www.mediawiki.org/wiki/Mathoid) + [Graphoid](https://www.mediawiki.org/wiki/Graphoid) + most popular extensions
 
 # Launching MediaWiki
 
@@ -24,6 +24,8 @@ Running `sudo docker-compose up` in a checkout of this repository will start con
 - `elasticsearch` - An [Elasticsearch](https://www.elastic.co/products/elasticsearch) [container](https://hub.docker.com/_/elasticsearch/), used as the full-text search engine for MediaWiki
 - `memcached` - A memory object caching system [container](https://hub.docker.com/_/memcached/), used as the cache system for MediaWiki
 - `parsoid` - A [bidirectional runtime wikitext parser](https://www.mediawiki.org/wiki/Parsoid) [container](https://hub.docker.com/r/pastakhov/parsoid/), used by [VisualEditor](https://www.mediawiki.org/wiki/VisualEditor), [Flow](https://www.mediawiki.org/wiki/Flow) and other [MediaWiki extensions](https://www.mediawiki.org/wiki/Extensions)
+- `mathoid`
+- `graphoid`
 - `proxy` - [Varnish reverse proxy server](https://www.mediawiki.org/wiki/Manual:Varnish_caching) [container](https://github.com/pastakhov/docker-mediawiki-varnish/) which reduces the time taken to serve often-requested pages
 - `restbase` - A [REST storage and service dispatcher](https://www.mediawiki.org/wiki/RESTBase) [container](https://hub.docker.com/r/pastakhov/restbase/)
 - `web` - An Apache/MediaWiki container with PHP 7.0 and MediaWiki 1.29
@@ -32,7 +34,18 @@ The elasticsearch, parsoid, restbase, proxy, web containers are based on [Ubuntu
 
 ## Settings
 
-Settings are in the `docker-compose.yml` file, the *environment* sections
+Settings are in the `docker-compose.yml` file, the *environment* sections; and in `.env` file.
+
+### .env
+
+Customize your installation by `.env` file:
+
+```
+MW_SITE_SERVER=http://localhost
+MW_SITE_NAME=MediaWiki
+MW_ADMIN_PASS=Wiki Admin Password
+MYSQL_ROOT_PASSWORD=MySQL Root Password
+```
 
 ### db 
 Was cloned from official [mysql](https://hub.docker.com/_/mysql/) container and has the same environment variables.
