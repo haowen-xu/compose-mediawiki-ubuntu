@@ -1,0 +1,3 @@
+[submodule "docker-restbase"]
+	path = docker-restbase
+	url = git@github.com:haowen-xu/docker-restbase.git
