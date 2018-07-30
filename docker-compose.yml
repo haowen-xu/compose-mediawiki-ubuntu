@@ -7,7 +7,7 @@ services:
             - mysql-data:/var/lib/mysql
         environment:
             - MYSQL_ROOT_HOST=%
-            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-MySQLROOTPASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
 
     proxy:
         image: pastakhov/varnish-mediawiki:1.0
@@ -40,19 +40,19 @@ services:
             - mathoid
             - restbase
         environment:
-            - MW_SITE_SERVER=${MW_SITE_SERVER:-http://localhost}
-            - MW_SITE_NAME=${MW_SITE_NAME:-MediaWiki}
+            - MW_SITE_SERVER=${MW_SITE_SERVER}
+            - MW_SITE_NAME=${MW_SITE_NAME}
             - MW_SITE_LANG=en
             - MW_DEFAULT_SKIN=vector
             - MW_ENABLE_UPLOADS=1
             - MW_USE_INSTANT_COMMONS=0
             - MW_ADMIN_USER=admin
-            - MW_ADMIN_PASS=${MW_ADMIN_PASS:-WIKIADMINPASSWORD}
+            - MW_ADMIN_PASS=${MW_ADMIN_PASS}
             - MW_DB_NAME=mediawiki
             - MW_DB_USER=mwuser
-            - MW_DB_PASS=${MYSQL_ROOT_PASSWORD:-MySQLROOTPASSWORD}
+            - MW_DB_PASS=${MYSQL_ROOT_PASSWORD}
             - MW_DB_INSTALLDB_USER=root
-            - MW_DB_INSTALLDB_PASS=${MYSQL_ROOT_PASSWORD:-MySQLROOTPASSWORD}
+            - MW_DB_INSTALLDB_PASS=${MYSQL_ROOT_PASSWORD}
             - MW_AUTOUPDATE=true
             - MW_PROXY_SERVERS=proxy
             - MW_MAIN_CACHE_TYPE=CACHE_MEMCACHED
@@ -84,7 +84,7 @@ services:
 
     restbase:
         build:
-            context: ./restbase/0.16.9
+            context: ./docker-restbase/0.16.9
             dockerfile: Dockerfile
         restart: always
         environment:

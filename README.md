@@ -38,7 +38,7 @@ Settings are in the `docker-compose.yml` file, the *environment* sections; and i
 
 ### .env
 
-Customize your installation by `.env` file:
+Customize your installation by `.env` file (REQUIRED):
 
 ```
 MW_SITE_SERVER=http://localhost
