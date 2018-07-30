@@ -38,10 +38,13 @@ Settings are in the `docker-compose.yml` file, the *environment* sections; and i
 
 ### .env
 
+Customize your installation by `.env` file:
+
 ```
-MYSQL_ROOT_PASSWORD=your mysql root password
-MW_ADMIN_PASS=your wiki admin password
-MW_SITE_SERVER=http://your-site-domain:your-site-port
+MW_SITE_SERVER=http://localhost
+MW_SITE_NAME=MediaWiki
+MW_ADMIN_PASS=Wiki Admin Password
+MYSQL_ROOT_PASSWORD=MySQL Root Password
 ```
 
 ### db 
