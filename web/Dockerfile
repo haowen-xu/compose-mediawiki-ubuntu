@@ -1,4 +1,4 @@
-FROM ipwx/docker-mediawiki:1.29
+FROM haowenxu/docker-mediawiki:1.29
 
 COPY favicon.ico $MW_HOME/favicon.ico
 COPY logo.png $MW_HOME/logo.png
